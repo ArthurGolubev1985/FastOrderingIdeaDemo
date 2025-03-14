@@ -1,4 +1,4 @@
-//This is a demo of idea of fast ordering by Arthur Golubev 1985.
+//This is a demo of idea of ag85aor1 ordering by Arthur Golubev 1985.
 //Note: to keep the demo simpler reapting values are intentianally not multiple in the resulting set
 
 #include <climits>
@@ -6,9 +6,9 @@
 #include <iostream>
 #include <stack>
 
-struct BitsLinkTreeLink{
-    BitsLinkTreeLink * zeroNextLinkPtr = nullptr;
-    BitsLinkTreeLink * oneNextLinkPtr = nullptr;
+struct AG85DST1Link{
+    AG85DST1Link * zeroNextLinkPtr = nullptr;
+    AG85DST1Link * oneNextLinkPtr = nullptr;
 };
 
 int main(){
@@ -28,24 +28,24 @@ int main(){
 
     uint8_t resultSequence[(sizeof(inputSequence) / sizeof(inputSequence[0]))];
     
-    BitsLinkTreeLink * treeRoot = new BitsLinkTreeLink;
+    AG85DST1Link * treeRoot = new AG85DST1Link;
 
     size_t bitsItemLength = sizeof(uint8_t) * CHAR_BIT;
     
     uint8_t bitsMask;
 
     for (uint8_t number : inputSequence){
-        BitsLinkTreeLink * currParrentPtr = treeRoot;
+        AG85DST1Link * currParrentPtr = treeRoot;
         bitsMask = 1 << (bitsItemLength - 1);
         for (size_t bitsInNumberCounter = 0; bitsInNumberCounter < bitsItemLength; ++bitsInNumberCounter){
             if (! (number & bitsMask)) {
                 if (! currParrentPtr->zeroNextLinkPtr) {
-                    currParrentPtr->zeroNextLinkPtr = new BitsLinkTreeLink;
+                    currParrentPtr->zeroNextLinkPtr = new AG85DST1Link;
                 }
                 currParrentPtr = currParrentPtr->zeroNextLinkPtr;
             } else {
                 if (! currParrentPtr->oneNextLinkPtr) {
-                    currParrentPtr->oneNextLinkPtr = new BitsLinkTreeLink;
+                    currParrentPtr->oneNextLinkPtr = new AG85DST1Link;
                 }
                 currParrentPtr = currParrentPtr->oneNextLinkPtr;
             }
@@ -56,11 +56,11 @@ int main(){
     struct TraversalStackItem{
         uint8_t valueTraversedPiece;
         uint8_t nextTraverseBitsMask;
-        BitsLinkTreeLink * linkPtr;
+        AG85DST1Link * linkPtr;
         TraversalStackItem(
             uint8_t setValueTraversedPiece
             , uint8_t setTraverseBitsMask
-            , BitsLinkTreeLink * setLinkPtr
+            , AG85DST1Link * setLinkPtr
             )
         : valueTraversedPiece(setValueTraversedPiece)
         , nextTraverseBitsMask(setTraverseBitsMask)
@@ -79,7 +79,11 @@ int main(){
         );
     }
     if (treeRoot->zeroNextLinkPtr){
-        treeLinksPtrsStack.emplace(0, (currTraverseBitsMask >> 1), treeRoot->zeroNextLinkPtr);
+        treeLinksPtrsStack.emplace(
+            0
+            , (currTraverseBitsMask >> 1)
+            , treeRoot->zeroNextLinkPtr
+        );
     }
     
     size_t traversedNumbersCounter = 0;
@@ -88,7 +92,7 @@ int main(){
         
         uint8_t valueTraversedPiece = treeLinksPtrsStack.top().valueTraversedPiece;
         currTraverseBitsMask = treeLinksPtrsStack.top().nextTraverseBitsMask;
-        BitsLinkTreeLink * currTraverseLink = treeLinksPtrsStack.top().linkPtr;
+        AG85DST1Link * currTraverseLink = treeLinksPtrsStack.top().linkPtr;
 
         treeLinksPtrsStack.pop();
 
