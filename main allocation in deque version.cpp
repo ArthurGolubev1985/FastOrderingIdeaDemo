@@ -7,7 +7,7 @@
 #include <stack>
 #include <deque>
 
-struct AG85DST1InUnderlyingStorageUnit{
+struct TreeInUnderlyingStorageUnit{
     size_t zeroNextUnitIndex = 0;
     size_t oneNextUnitIndex = 0;
 };
@@ -29,7 +29,7 @@ int main(){
 
     uint8_t resultSequence[inputSequenceLength];
 
-    std::deque<AG85DST1InUnderlyingStorageUnit> ag85dst1UnderlyingStorage;
+    std::deque<TreeInUnderlyingStorageUnit> treeUnderlyingStorage;
     size_t currAG85DST1UnderlyingStorageFreePlaceIndex = 1;
     
     size_t ag85dst1StartingUnderlyingStorageIndex = 0;
@@ -43,27 +43,27 @@ int main(){
         bitsMask = 1 << (bitsItemLength - 1);
         for (size_t bitsInNumberCounter = 0; bitsInNumberCounter < bitsItemLength; ++bitsInNumberCounter){
             if (! (number & bitsMask)) {
-                if (0 == ag85dst1UnderlyingStorage[currUnderlyingStorageIndex].zeroNextUnitIndex){
-                    if((ag85dst1UnderlyingStorage.size() - 1) < currUnderlyingStorageIndex){
-                        ag85dst1UnderlyingStorage.emplace_back();
+                if (0 == treeUnderlyingStorage[currUnderlyingStorageIndex].zeroNextUnitIndex){
+                    if((treeUnderlyingStorage.size() - 1) < currUnderlyingStorageIndex){
+                        treeUnderlyingStorage.emplace_back();
                     }
-                    ag85dst1UnderlyingStorage[currUnderlyingStorageIndex].zeroNextUnitIndex
+                    treeUnderlyingStorage[currUnderlyingStorageIndex].zeroNextUnitIndex
                         = currAG85DST1UnderlyingStorageFreePlaceIndex;
                     ++currAG85DST1UnderlyingStorageFreePlaceIndex;
                 }
                 currUnderlyingStorageIndex 
-                    = ag85dst1UnderlyingStorage[currUnderlyingStorageIndex].zeroNextUnitIndex;
+                    = treeUnderlyingStorage[currUnderlyingStorageIndex].zeroNextUnitIndex;
             } else {
-                if((ag85dst1UnderlyingStorage.size() - 1) < currUnderlyingStorageIndex){
-                    ag85dst1UnderlyingStorage.emplace_back();
+                if((treeUnderlyingStorage.size() - 1) < currUnderlyingStorageIndex){
+                    treeUnderlyingStorage.emplace_back();
                 }
-                if (0 == ag85dst1UnderlyingStorage[currUnderlyingStorageIndex].oneNextUnitIndex){
-                    ag85dst1UnderlyingStorage[currUnderlyingStorageIndex].oneNextUnitIndex
+                if (0 == treeUnderlyingStorage[currUnderlyingStorageIndex].oneNextUnitIndex){
+                    treeUnderlyingStorage[currUnderlyingStorageIndex].oneNextUnitIndex
                         = currAG85DST1UnderlyingStorageFreePlaceIndex;
                     ++currAG85DST1UnderlyingStorageFreePlaceIndex;
                 }
                 currUnderlyingStorageIndex 
-                    = ag85dst1UnderlyingStorage[currUnderlyingStorageIndex].oneNextUnitIndex;
+                    = treeUnderlyingStorage[currUnderlyingStorageIndex].oneNextUnitIndex;
             }
             bitsMask = bitsMask >> 1;
         }
@@ -87,18 +87,18 @@ int main(){
 
     std::stack<TraversalStackItem> treeLinksPtrsStack;
     uint8_t currTraverseBitsMask = (1 << (bitsItemLength - 1));
-    if (0 != ag85dst1UnderlyingStorage[ag85dst1StartingUnderlyingStorageIndex].oneNextUnitIndex){
+    if (0 != treeUnderlyingStorage[ag85dst1StartingUnderlyingStorageIndex].oneNextUnitIndex){
         treeLinksPtrsStack.emplace(
             currTraverseBitsMask
             , (currTraverseBitsMask >> 1)
-            , ag85dst1UnderlyingStorage[ag85dst1StartingUnderlyingStorageIndex].oneNextUnitIndex
+            , treeUnderlyingStorage[ag85dst1StartingUnderlyingStorageIndex].oneNextUnitIndex
         );
     }
-    if (0 != ag85dst1UnderlyingStorage[ag85dst1StartingUnderlyingStorageIndex].zeroNextUnitIndex){
+    if (0 != treeUnderlyingStorage[ag85dst1StartingUnderlyingStorageIndex].zeroNextUnitIndex){
         treeLinksPtrsStack.emplace(
             0
             , (currTraverseBitsMask >> 1)
-            , ag85dst1UnderlyingStorage[ag85dst1StartingUnderlyingStorageIndex].zeroNextUnitIndex
+            , treeUnderlyingStorage[ag85dst1StartingUnderlyingStorageIndex].zeroNextUnitIndex
         );
     }
     
@@ -119,20 +119,20 @@ int main(){
 
         } else {
 
-            if (ag85dst1UnderlyingStorage[currTraverseUnitIndex].oneNextUnitIndex){
+            if (treeUnderlyingStorage[currTraverseUnitIndex].oneNextUnitIndex){
                 
                 treeLinksPtrsStack.emplace(
                     (valueTraversedPiece | currTraverseBitsMask)
                     , currTraverseBitsMask >> 1
-                    , ag85dst1UnderlyingStorage[currTraverseUnitIndex].oneNextUnitIndex
+                    , treeUnderlyingStorage[currTraverseUnitIndex].oneNextUnitIndex
                 );
             }
-            if (ag85dst1UnderlyingStorage[currTraverseUnitIndex].zeroNextUnitIndex){
+            if (treeUnderlyingStorage[currTraverseUnitIndex].zeroNextUnitIndex){
 
                 treeLinksPtrsStack.emplace(
                     valueTraversedPiece
                     , currTraverseBitsMask >> 1
-                    , ag85dst1UnderlyingStorage[currTraverseUnitIndex].zeroNextUnitIndex
+                    , treeUnderlyingStorage[currTraverseUnitIndex].zeroNextUnitIndex
                 );
             }
 

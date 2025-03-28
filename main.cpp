@@ -6,9 +6,9 @@
 #include <iostream>
 #include <stack>
 
-struct AG85DST1Link{
-    AG85DST1Link * zeroNextLinkPtr = nullptr;
-    AG85DST1Link * oneNextLinkPtr = nullptr;
+struct TreeLink{
+    TreeLink * zeroNextLinkPtr = nullptr;
+    TreeLink * oneNextLinkPtr = nullptr;
 };
 
 int main(){
@@ -28,24 +28,24 @@ int main(){
 
     uint8_t resultSequence[(sizeof(inputSequence) / sizeof(inputSequence[0]))];
     
-    AG85DST1Link * treeRoot = new AG85DST1Link;
+    TreeLink * treeRoot = new TreeLink;
 
     size_t bitsItemLength = sizeof(uint8_t) * CHAR_BIT;
     
     uint8_t bitsMask;
 
     for (uint8_t number : inputSequence){
-        AG85DST1Link * currParrentPtr = treeRoot;
+        TreeLink * currParrentPtr = treeRoot;
         bitsMask = 1 << (bitsItemLength - 1);
         for (size_t bitsInNumberCounter = 0; bitsInNumberCounter < bitsItemLength; ++bitsInNumberCounter){
             if (! (number & bitsMask)) {
                 if (! currParrentPtr->zeroNextLinkPtr) {
-                    currParrentPtr->zeroNextLinkPtr = new AG85DST1Link;
+                    currParrentPtr->zeroNextLinkPtr = new TreeLink;
                 }
                 currParrentPtr = currParrentPtr->zeroNextLinkPtr;
             } else {
                 if (! currParrentPtr->oneNextLinkPtr) {
-                    currParrentPtr->oneNextLinkPtr = new AG85DST1Link;
+                    currParrentPtr->oneNextLinkPtr = new TreeLink;
                 }
                 currParrentPtr = currParrentPtr->oneNextLinkPtr;
             }
@@ -56,11 +56,11 @@ int main(){
     struct TraversalStackItem{
         uint8_t valueTraversedPiece;
         uint8_t nextTraverseBitsMask;
-        AG85DST1Link * linkPtr;
+        TreeLink * linkPtr;
         TraversalStackItem(
             uint8_t setValueTraversedPiece
             , uint8_t setTraverseBitsMask
-            , AG85DST1Link * setLinkPtr
+            , TreeLink * setLinkPtr
             )
         : valueTraversedPiece(setValueTraversedPiece)
         , nextTraverseBitsMask(setTraverseBitsMask)
@@ -92,7 +92,7 @@ int main(){
         
         uint8_t valueTraversedPiece = treeLinksPtrsStack.top().valueTraversedPiece;
         currTraverseBitsMask = treeLinksPtrsStack.top().nextTraverseBitsMask;
-        AG85DST1Link * currTraverseLink = treeLinksPtrsStack.top().linkPtr;
+        TreeLink * currTraverseLink = treeLinksPtrsStack.top().linkPtr;
 
         treeLinksPtrsStack.pop();
 
